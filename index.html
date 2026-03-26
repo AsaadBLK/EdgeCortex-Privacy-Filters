@@ -1,0 +1,86 @@
+<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #0d1117; color: #c9d1d9; padding: 40px; border-radius: 10px; max-width: 900px; margin: 0 auto; border: 1px solid #30363d; line-height: 1.6;">
+
+    <h1 style="color: #ffffff; border-bottom: 1px solid #21262d; padding-bottom: 10px; font-size: 2.2rem; margin-top: 0;">
+        🛡️ EdgeCortex Privacy Filters (ECPF)
+    </h1>
+    
+    <div style="margin-bottom: 30px; display: flex; gap: 10px; flex-wrap: wrap;">
+        <span style="background-color: rgba(56, 189, 248, 0.1); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">v 1.0.4-beta</span>
+        <span style="background-color: rgba(35, 134, 54, 0.1); color: #2ea043; border: 1px solid rgba(35, 134, 54, 0.4); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">Active Development</span>
+        <span style="background-color: rgba(139, 148, 158, 0.1); color: #8b949e; border: 1px solid rgba(139, 148, 158, 0.4); padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">MIT License</span>
+    </div>
+
+    <p style="font-size: 1.1rem; color: #8b949e; margin-bottom: 30px;">
+        An open-source, local-first NPU middleware designed to sanitize OS-level AI telemetry before it reaches the enterprise cloud.
+    </p>
+
+    <h2 style="color: #ffffff; font-size: 1.5rem; margin-top: 40px; border-bottom: 1px solid #21262d; padding-bottom: 8px;">📖 Overview</h2>
+    <p>
+        As enterprise software shifts from network-level surveillance to endpoint behavioral analytics, modern AI agents constantly capture screen context, keystrokes, and sentiment. This creates a critical paradox: <strong>Enterprises need productivity and security metrics, but employees require data privacy.</strong>
+    </p>
+    <p>
+        <strong>EdgeCortex Privacy Filters (ECPF)</strong> acts as a neutral technical bridge. It intercepts raw telemetry at the OS level, processes it locally using the device's Neural Processing Unit (NPU), strips all Personally Identifiable Information (PII) and exact context, and transmits only standardized mathematical metadata to the cloud dashboard.
+    </p>
+
+    <h2 style="color: #ffffff; font-size: 1.5rem; margin-top: 40px; border-bottom: 1px solid #21262d; padding-bottom: 8px;">🏗️ Architecture Pipeline</h2>
+    <ol style="padding-left: 20px; color: #c9d1d9;">
+        <li style="margin-bottom: 10px;"><strong><code>Interceptor</code>:</strong> Hooks into the local OS telemetry stream (screen context, app focus).</li>
+        <li style="margin-bottom: 10px;"><strong><code>Local-SLM Engine</code>:</strong> A lightweight Small Language Model (SLM) runs locally on the NPU to evaluate the raw data.</li>
+        <li style="margin-bottom: 10px;"><strong><code>The Sanitizer</code>:</strong> Redacts raw text, blurs visual buffers, and drops sensitive payloads.</li>
+        <li style="margin-bottom: 10px;"><strong><code>Dispatcher</code>:</strong> Formats the sanitized evaluation into a clean JSON payload and sends it to the corporate cloud endpoint.</li>
+    </ol>
+
+    <h2 style="color: #ffffff; font-size: 1.5rem; margin-top: 40px; border-bottom: 1px solid #21262d; padding-bottom: 8px;">📊 The "Zero-Context" Payload (Example)</h2>
+    <p>ECPF prevents raw screen data from leaving the local machine. Here is how ECPF transforms the data payload:</p>
+
+    <h3 style="color: #f85149; font-size: 1.1rem; margin-top: 20px;">❌ Before ECPF (Raw Telemetry - Privacy Violation):</h3>
+    <pre style="background-color: #161b22; padding: 15px; border-radius: 6px; overflow-x: auto; border: 1px solid #30363d;"><code style="font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 0.9rem; color: #e6edf3;">{
+  "timestamp": "2026-03-26T10:14:00Z",
+  "active_window": "WhatsApp Desktop",
+  "screen_text": "Hey, I'm thinking about quitting and applying to Google next month...",
+  "sentiment_analysis": "Frustrated",
+  "security_flag": false
+}</code></pre>
+
+    <h3 style="color: #3fb950; font-size: 1.1rem; margin-top: 30px;">✅ After ECPF (Filtered Telemetry - Enterprise Ready):</h3>
+    <pre style="background-color: #161b22; padding: 15px; border-radius: 6px; overflow-x: auto; border: 1px solid #30363d;"><code style="font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 0.9rem; color: #e6edf3;">{
+  "timestamp": "2026-03-26T10:14:00Z",
+  "agent_id": "USR-8842",
+  "productivity_score": 0.2,
+  "focus_category": "Non-Work_Communication",
+  "pii_redacted": true,
+  "raw_data_dropped": true,
+  "security_threat_detected": false
+}</code></pre>
+    <p style="font-size: 0.9rem; color: #8b949e; font-style: italic; margin-top: 10px;">
+        *Notice: The enterprise still receives the metric (low productivity), but the employee's exact conversation and personal intent never leave the local hardware.*
+    </p>
+
+    <h2 style="color: #ffffff; font-size: 1.5rem; margin-top: 40px; border-bottom: 1px solid #21262d; padding-bottom: 8px;">⚙️ Quick Start (Local Deployment)</h2>
+    
+    <h3 style="color: #ffffff; font-size: 1.2rem; margin-top: 20px;">Prerequisites</h3>
+    <ul style="padding-left: 20px; color: #c9d1d9;">
+        <li>Minimum 4GB VRAM or a dedicated local NPU (Neural Processing Unit).</li>
+        <li>Python 3.11+</li>
+        <li>Supported Edge Models: <code>Llama-3-8B-Instruct</code> or equivalent SLM.</li>
+    </ul>
+
+    <h3 style="color: #ffffff; font-size: 1.2rem; margin-top: 20px;">Installation</h3>
+    <pre style="background-color: #161b22; padding: 15px; border-radius: 6px; overflow-x: auto; border: 1px solid #30363d;"><code style="font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 0.9rem; color: #e6edf3;">git clone https://github.com/InnovSpace/EdgeCortex-Privacy-Filters.git
+cd EdgeCortex-Privacy-Filters
+pip install -r requirements.txt</code></pre>
+
+    <h3 style="color: #ffffff; font-size: 1.2rem; margin-top: 20px;">Run the Interceptor Module</h3>
+    <pre style="background-color: #161b22; padding: 15px; border-radius: 6px; overflow-x: auto; border: 1px solid #30363d; margin-bottom: 30px;"><code style="font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 0.9rem; color: #e6edf3;">python run_interceptor.py --npu-accelerate true --strict-privacy true</code></pre>
+
+    <div style="background-color: rgba(56, 189, 248, 0.05); padding: 25px; border-radius: 8px; border-left: 4px solid #38bdf8; margin-top: 40px;">
+        <h3 style="color: #ffffff; font-size: 1.3rem; margin-top: 0; margin-bottom: 10px;">🤝 Philosophy: Augmentation over Surveillance</h3>
+        <p style="margin: 0; color: #c9d1d9;">
+            We believe AI should empower the workforce, not police it. This framework allows CTOs and HR departments to gather necessary high-level operational metrics while strictly maintaining the mental space and digital privacy of their teams.
+        </p>
+        <p style="margin-top: 15px; margin-bottom: 0; font-size: 0.95rem; color: #8b949e;">
+            <strong>Maintainer:</strong> Asaad BELKAHIA (Systems Orchestrator)
+        </p>
+    </div>
+
+</div>
